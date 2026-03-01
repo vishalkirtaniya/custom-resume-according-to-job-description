@@ -1,0 +1,79 @@
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+% --- Formatting ---
+\pagestyle{empty} % Remove page numbers
+\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.2em} % Tight bullet points
+
+% Section heading style
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titlespacing*{\section}{0pt}{12pt}{8pt}
+
+\begin{document}
+
+% --- Header ---
+\begin{center}
+    {\Huge \textbf{(( name ))}} \\ \vspace{4pt}
+    \small 
+    (( location )) $|$ (( phone )) $|$ 
+    \href{mailto:(( email ))}{(( email ))} \\
+    \href{https://(( linkedin ))}{LinkedIn} $|$ 
+    \href{https://(( github ))}{GitHub} $|$ 
+    \href{https://(( portfolio ))}{Portfolio}
+\end{center}
+
+% --- Summary ---
+\section*{Summary}
+(( summary ))
+
+% --- Skills ---
+\section*{Technical Skills}
+\begin{itemize}[label={}]
+    \item \textbf{Languages:} (( languages ))
+    \item \textbf{Backend:} (( backend ))
+    \item \textbf{Frontend:} (( frontend ))
+    \item \textbf{Databases:} (( databases ))
+    \item \textbf{Tools/Cloud:} (( tools ))
+\end{itemize}
+
+% --- Experience ---
+\section*{Work Experience}
+
+% Your pipeline will loop through these
+(( for exp in work_experience ))
+\textbf{(( exp.role ))} \hfill (( exp.duration )) \\
+\textit{(( exp.company ))} \hfill (( exp.location ))
+\begin{itemize}
+    (( exp.bullets ))
+\end{itemize}
+\vspace{6pt}
+(( endfor ))
+
+% --- Projects ---
+\section*{Technical Projects}
+
+(( for project in projects ))
+\textbf{(( project.title ))} \hfill (( project.duration )) \\
+\textit{Stack: (( project.stack ))}
+\begin{itemize}
+    (( project.bullets ))
+\end{itemize}
+\vspace{6pt}
+(( endfor ))
+
+% --- Education ---
+\section*{Education}
+(( for edu in education ))
+\textbf{(( edu.degree ))} \hfill (( edu.graduation )) \\
+(( edu.institution )) (( if edu.status )) (\textit{(( edu.status ))}) (( endif )) \\
+(( endfor ))
+
+\end{document}
