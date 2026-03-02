@@ -3,6 +3,7 @@ import signal
 import sys
 from services.resume_matcher_service import ResumeMatcherService
 from services.ollama_generator_service import OllamaGeneratorService
+from services.latex_builder_service import LatexBuilderService
 from utils.logger import logger
 
 shutdown_requested = False # This flag will tell our loop if it's time to stop
@@ -20,6 +21,7 @@ def run_automation(job_description):
 
     matcher = ResumeMatcherService()
     generator = OllamaGeneratorService()
+    latex_builder = LatexBuilderService()
 
     if not matcher.skills_data or not matcher.experience_data:
         logger.warning("Error: Essential data files (skills/experience) are missing or empty")
@@ -79,7 +81,19 @@ def run_automation(job_description):
     logger.info("\n Success! All Bullets generated.")
     print(f"Final Resume Data: {final_resume_data}")
 
-    return final_resume_data
+    logger.info("🛠️ Building final LaTeX document...")
+    tex_file = latex_builder.build_tex(final_resume_data)
+
+    if tex_file:
+        print(f"\n✨ DONE! Your tailored LaTeX file is ready: {tex_file}")
+        print("Run 'pdflatex output/tailored_resume.tex' to generate the PDF.")
+
+    if tex_file and not shutdown_requested:
+        pdf_file = latex_builder.compile_pdf(tex_file)
+        if pdf_file:
+            print(f"\n🎉 ALL STEPS COMPLETE!")
+            print(f"📄 Tailored PDF: {pdf_file}")
+            print(f"📝 Tailored TeX: {tex_file}")
 
 if __name__ == "__main__":
     target_jd = """

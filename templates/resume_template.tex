@@ -1,79 +1,81 @@
 \documentclass[11pt,a4paper]{article}
 
 % --- Packages ---
-\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=0.75in]{geometry}
+\usepackage[margin=0.5in]{geometry}
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{titlesec}
 \usepackage{xcolor}
 
-% --- Formatting ---
-\pagestyle{empty} % Remove page numbers
-\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.2em} % Tight bullet points
+% --- Custom Formatting ---
+\pagestyle{empty}
+\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.2em}
 
-% Section heading style
 \titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
-\titlespacing*{\section}{0pt}{12pt}{8pt}
+\titlespacing*{\section}{0pt}{10pt}{6pt}
 
 \begin{document}
 
-% --- Header ---
+% --- Header (Constant) ---
 \begin{center}
-    {\Huge \textbf{(( name ))}} \\ \vspace{4pt}
-    \small 
-    (( location )) $|$ (( phone )) $|$ 
-    \href{mailto:(( email ))}{(( email ))} \\
-    \href{https://(( linkedin ))}{LinkedIn} $|$ 
-    \href{https://(( github ))}{GitHub} $|$ 
-    \href{https://(( portfolio ))}{Portfolio}
+    {\Huge \textbf{Vishal Aditya Kirtaniya}} \\ \vspace{4pt}
+    \small
+    Mumbai, India $|$ +91 8839054275 \\
+    \href{mailto:vishalkirtaniyaofficial@gmail.com}{vishalkirtaniyaofficial@gmail.com} [cite: 3] \\
+    \href{https://linkedin.com/in/vishalkirtaniya}{linkedin.com/in/vishalkirtaniya} $|$
+    \href{https://github.com/vishalkirtaniya}{github.com/vishalkirtaniya} [cite: 3]
 \end{center}
 
-% --- Summary ---
+% --- Summary (Constant) ---
 \section*{Summary}
-(( summary ))
+Junior Software Engineer skilled in full stack development, real-time data pipelines, 
+API design, and system optimization[cite: 5]. Experienced with Python, Node.js, and Next.js, 
+applying strong OOP and debugging skills to build scalable, secure, and high-performance applications[cite: 6].
 
-% --- Skills ---
-\section*{Technical Skills}
+% --- Skills (Dynamic Matched Skills) ---
+\section*{Skills}
 \begin{itemize}[label={}]
-    \item \textbf{Languages:} (( languages ))
-    \item \textbf{Backend:} (( backend ))
-    \item \textbf{Frontend:} (( frontend ))
-    \item \textbf{Databases:} (( databases ))
-    \item \textbf{Tools/Cloud:} (( tools ))
+    \item \textbf{Languages:} (( skills.Languages | join(', ') ))
+    ((* if skills.Backend *)) \item \textbf{Backend:} (( skills.Backend | join(', ') )) ((* endif *))
+    ((* if skills.Frontend *)) \item \textbf{Frontend:} (( skills.Frontend | join(', ') )) ((* endif *))
+    \item \textbf{Databases:} MongoDB, MySQL, PostgreSQL
+    \item \textbf{Tools:} Git, Docker, Postman, Linux (Ubuntu), NPM
 \end{itemize}
 
-% --- Experience ---
+% --- Experience (Constant Work Experience) ---
 \section*{Work Experience}
 
-% Your pipeline will loop through these
-(( for exp in work_experience ))
-\textbf{(( exp.role ))} \hfill (( exp.duration )) \\
-\textit{(( exp.company ))} \hfill (( exp.location ))
+\textbf{Software Engineer I} $|$ Totality Corp \hfill Apr 2025 -- Feb 2026 [cite: 8, 9]
 \begin{itemize}
-    (( exp.bullets ))
+    \item Built a technical analysis trading system with custom strategies delivering \textbf{20\% returns}[cite: 10].
+    \item Developed APIs for an AI-powered golf assistant app, improving prediction accuracy by \textbf{30\%}[cite: 11].
+    \item Designed real-time ingestion pipelines integrating Dhan APIs with \textbf{100\% uptime}[cite: 12].
+    \item Worked as a Full Stack Developer across \textbf{4+ production projects} including Greenr, Swift Alpha, Jupito, and Swingo[cite: 13].
 \end{itemize}
-\vspace{6pt}
-(( endfor ))
 
-% --- Projects ---
+\vspace{4pt}
+\textbf{Frontend Developer Intern} $|$ Totality Corp \hfill Oct 2024 -- Mar 2025 [cite: 14, 15]
+\begin{itemize}
+    \item Built responsive dashboards for \textbf{multiple internal projects} using React and Next.js[cite: 17].
+    \item Created reusable UI components and layouts, accelerating feature development by \textbf{25\%}.
+    \item Implemented REST APIs and collaborated closely with backend engineers[cite: 19].
+    \item Wrote and executed \textbf{50+ API test cases} using Postman[cite: 20].
+\end{itemize}
+
+% --- Technical Projects (Dynamic Loop) ---
 \section*{Technical Projects}
-
-(( for project in projects ))
-\textbf{(( project.title ))} \hfill (( project.duration )) \\
-\textit{Stack: (( project.stack ))}
+((* for project in projects *))
+\textbf{(( project.title ))} \\
 \begin{itemize}
-    (( project.bullets ))
+    (( project.bullets )) 
 \end{itemize}
-\vspace{6pt}
-(( endfor ))
+\vspace{4pt}
+((* endfor *))
 
-% --- Education ---
+% --- Education (Constant) ---
 \section*{Education}
-(( for edu in education ))
-\textbf{(( edu.degree ))} \hfill (( edu.graduation )) \\
-(( edu.institution )) (( if edu.status )) (\textit{(( edu.status ))}) (( endif )) \\
-(( endfor ))
+\textbf{BCA} $|$ Lovely Professional University (Online) \hfill May 2025 [cite: 55, 57] \\
+\textbf{Senior Secondary (PCBM)} $|$ Kendriya Vidyalaya, Satna [cite: 56]
 
 \end{document}
