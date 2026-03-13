@@ -191,10 +191,6 @@ async def compile_pdf(request: TexToPdfRequest, user=Depends(get_current_user)):
                     capture_output=True, text=True, timeout=30
                 )
 
-            print("=== pdflatex returncode:", result.returncode)
-            print("=== pdflatex stdout:", result.stdout)
-            print("=== pdflatex stderr:", result.stderr)
-
             if not os.path.exists(pdf_path):
                 # Return the compiler log so you can debug LaTeX errors
                 raise HTTPException(
