@@ -38,6 +38,8 @@ class LoginSchema(BaseModel):
     email: EmailStr
     password: str
 
+class RefreshRequest(BaseModel):
+    refresh_token: str
 
 @router.post("/auth/register", status_code=201)
 async def register_user(data: RegisterSchema):
@@ -365,3 +367,21 @@ async def sync_certifications(items: List[CertificationItemSchema], user=Depends
         return {"status": "success", "count": len(items)}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+@router.post("/auth/refresh")
+async def refresh_token(data: RefreshRequest):
+    try:
+        client = SupabaseService.get_client()
+        result = client.auth.refresh_session(data.refresh_token)
+        if not result.session:
+            raise HTTPException(status_code=401, detail="Invalid or expired refresh token")
+        return {
+            "status": "success",
+            "access_token": result.session.access_token,
+            "refresh_token": result.session.refresh_token,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Token refresh failed: {e}")
+        raise HTTPException(status_code=401, detail="Session refresh failed — please log in again")
