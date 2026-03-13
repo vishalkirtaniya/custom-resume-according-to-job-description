@@ -19,12 +19,22 @@ class LatexBuilderService:
         self.template_name = template_name
 
         def bold_metrics(text: str) -> str:
+            def replace(m):
+                val = m.group(1)
+                # If % comes immediately after the number (outside the match), catch it
+                return f'\\textbf{{{val}}}'
+
+            # Updated regex — make the % mandatory part of the match when present
             return re.sub(
-                r'(\b\d+[\.,]?\d*\s?(?:%|x|ms|s|K|M|hrs?|days?|\+)?\b)',
-                r'\\textbf{\1}',
-                text
+                r'(\b\d+[\.,]?\d*\s?)(%)' ,
+                lambda m: f'\\textbf{{{m.group(1)}\\%}}',
+                re.sub(
+                    r'(\b\d+[\.,]?\d*\s?(?:x|ms|K|M|hrs?|days?|\+)\b)',
+                    lambda m: f'\\textbf{{{m.group(1)}}}',
+                    text
+                )
             )
- 
+
         self.env.filters['bold_metrics'] = bold_metrics
 
     def build_tex(self, resume_data, output_path='output/tailored_resume.tex', shutdown_flag=False):

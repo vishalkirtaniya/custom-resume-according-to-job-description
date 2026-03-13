@@ -1,9 +1,10 @@
 import os
-from fastapi import FastAPI, Depends, HTTPException, Header
+from fastapi import FastAPI, Depends, HTTPException, Header, Response
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from typing import List, Optional
+import tempfile, subprocess, os
 
 # Services
 from services.supabase_service import SupabaseService
@@ -38,6 +39,9 @@ class ProfileSchema(BaseModel):
 
 class ResumeRequest(BaseModel):
     job_description: str
+
+class TexToPdfRequest(BaseModel):
+    tex: str
 
 # ── App setup ─────────────────────────────────────────────────────────────────
 
@@ -167,6 +171,50 @@ async def sync_profile(data: ProfileSchema, user=Depends(get_current_user)):
 
         return {"status": "success", "message": "Profile and Experience synced to Supabase"}
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/compile-pdf")
+async def compile_pdf(request: TexToPdfRequest, user=Depends(get_current_user)):
+    try:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tex_path = os.path.join(tmpdir, "resume.tex")
+            pdf_path = os.path.join(tmpdir, "resume.pdf")
+
+            with open(tex_path, "w", encoding="utf-8") as f:
+                f.write(request.tex)
+
+            # Run twice — second pass fixes any cross-references
+            for _ in range(2):
+                result = subprocess.run(
+                    ["pdflatex", "-interaction=nonstopmode", "-output-directory", tmpdir, tex_path],
+                    capture_output=True, text=True, timeout=30
+                )
+
+            print("=== pdflatex returncode:", result.returncode)
+            print("=== pdflatex stdout:", result.stdout)
+            print("=== pdflatex stderr:", result.stderr)
+
+            if not os.path.exists(pdf_path):
+                # Return the compiler log so you can debug LaTeX errors
+                raise HTTPException(
+                    status_code=422,
+                    detail=f"pdflatex failed:\n{result.stdout[-1000:]}"
+                )
+
+            with open(pdf_path, "rb") as f:
+                pdf_bytes = f.read()
+
+            return Response(
+                content=pdf_bytes,
+                media_type="application/pdf",
+                headers={"Content-Disposition": "attachment; filename=tailored_resume.pdf"}
+            )
+
+    except subprocess.TimeoutExpired:
+        raise HTTPException(status_code=504, detail="pdflatex timed out after 30s")
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
