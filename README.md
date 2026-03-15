@@ -35,7 +35,7 @@ Resume Autobot is a full-stack AI-powered resume builder. This backend handles a
 | Templates | Jinja2 (custom LaTeX delimiters) |
 | Cache | In-memory TTL cache |
 | Rate limiting | slowapi |
-| Deployment | Docker + AWS EC2 (Mumbai) |
+| Deployment | Docker + AWS EC2 |
 
 ---
 
@@ -78,11 +78,11 @@ certifications (id, user_id → profiles, name, issuer, issue_date, expiry_date,
 ## API Endpoints
 
 ### Auth
-| Method | Endpoint | Description | Rate limit |
+| Method | Endpoint | Description |
 |---|---|---|---|
-| POST | `/auth/register` | Create new account | 5/hour per IP |
-| POST | `/auth/login` | Sign in, returns JWT tokens | 10/min per IP |
-| POST | `/auth/refresh` | Refresh access token | — |
+| POST | `/auth/register` | Create new account |
+| POST | `/auth/login` | Sign in, returns JWT tokens |
+| POST | `/auth/refresh` | Refresh access token |
 
 ### Profile (Bearer token required)
 | Method | Endpoint | Description |
@@ -95,11 +95,11 @@ certifications (id, user_id → profiles, name, issuer, issue_date, expiry_date,
 | GET / POST | `/profile/certifications` | Get or replace certifications |
 
 ### Generation (Bearer token required)
-| Method | Endpoint | Description | Rate limit |
+| Method | Endpoint | Description |
 |---|---|---|---|
-| POST | `/generate` | Match skills, generate LaTeX resume | 5/hour per user |
-| POST | `/compile-pdf` | Compile `.tex` string to PDF | 10/hour per user |
-| GET | `/health` | Health check | — |
+| POST | `/generate` | Match skills, generate LaTeX resume |
+| POST | `/compile-pdf` | Compile `.tex` string to PDF |
+| GET | `/health` | Health check |
 
 ### Example: Generate Resume
 ```bash
@@ -219,7 +219,7 @@ docker compose up --build -d
 
 ## Deployment
 
-Deployed on **AWS EC2 t3.small** in **ap-south-1 (Mumbai)** region.
+Deployed on **AWS EC2 t3.small** in **ap-south-1** region.
 
 ```bash
 # SSH into your server
