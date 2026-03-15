@@ -79,7 +79,7 @@ certifications (id, user_id → profiles, name, issuer, issue_date, expiry_date,
 
 ### Auth
 | Method | Endpoint | Description |
-|---|---|---|---|
+|---|---|---|
 | POST | `/auth/register` | Create new account |
 | POST | `/auth/login` | Sign in, returns JWT tokens |
 | POST | `/auth/refresh` | Refresh access token |
